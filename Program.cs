@@ -34,7 +34,7 @@ namespace gauth
         {
             if (args.Length != 2)
             {
-                Console.WriteLine("Required command line arguments: client-id client-secret");
+                Console.Error.WriteLine("Required command line arguments: client-id client-secret");
                 return 1;
             }
             string clientId = args[0];
@@ -74,7 +74,8 @@ namespace gauth
             const string codeChallengeMethod = "S256";
 
             // Creates a redirect URI using an available port on the loopback address.
-            string redirectUri = $"http://{IPAddress.Loopback}:{GetRandomUnusedPort()}/";
+            // 127.0.0.1 is not allowed in Windows8
+            string redirectUri = $"http://localhost:{GetRandomUnusedPort()}/";
             Log("redirect URI: " + redirectUri);
 
             // Creates an HttpListener to listen for requests on that redirect URI.
@@ -241,7 +242,7 @@ namespace gauth
         /// <param name="output">String to be logged</param>
         private void Log(string output)
         {
-            Console.WriteLine(output);
+            // Console.WriteLine(output);
         }
 
         /// <summary>
@@ -287,19 +288,19 @@ namespace gauth
             return base64;
         }
 
-        // Hack to bring the Console window to front.
-        // ref: http://stackoverflow.com/a/12066376
+        // // Hack to bring the Console window to front.
+        // // ref: http://stackoverflow.com/a/12066376
 
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        public static extern IntPtr GetConsoleWindow();
+        // [DllImport("kernel32.dll", ExactSpelling = true)]
+        // public static extern IntPtr GetConsoleWindow();
 
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        // [DllImport("user32.dll")]
+        // [return: MarshalAs(UnmanagedType.Bool)]
+        // public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         public void BringConsoleToFront()
         {
-            SetForegroundWindow(GetConsoleWindow());
+            // SetForegroundWindow(GetConsoleWindow());
         }
 
     }
